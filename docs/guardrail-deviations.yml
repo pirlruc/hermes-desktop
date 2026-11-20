@@ -1,0 +1,15 @@
+# Recorded departures from the guardrails pinned at docs/guardrails/.
+# Stricter than the org default needs no entry. Lowering a gate needs an Epic
+# and Engineering Lead approval. See docs/guardrails deviation rule.
+deviations:
+  - id: CI-021
+    why: >-
+      The pinned guardrails checkout has no rust/profile.thresholds.yml.
+      Rust coverage floors stay the node pack's 95/95 and are passed as
+      workflow inputs until https://github.com/pirlruc/guardrails/issues/505
+      (GR-LANG-RUST-001) publishes the pack. check-guardrails-packs still
+      fails closed once Cargo.toml exists; this entry does not silence it.
+    epic: HD-001
+    owner: pirlruc
+    approved_by: pirlruc (2026-11-20)
+    review: 2027-02-20
