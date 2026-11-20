@@ -1,0 +1,175 @@
+milestones:
+  - name: Phase 1 — Foundation
+    epics:
+      - id: HD-001
+        status: open
+        title: Choose the desktop stack
+        overview:
+          problem: >-
+            The Python CLI cannot host a desktop window or a consent dialog
+            next to a local reference library.
+          goal: >-
+            One Tauri 2 process owns the window, the Rust core, and a
+            React/TypeScript UI built with Node 24.
+        decision: >-
+          In the context of a local reference library that syncs with Delphi
+          Engine, facing a CLI that cannot host a desktop UI, we decided a
+          Tauri 2 app with a Rust core and a React/TypeScript UI on Node 24,
+          to achieve one process with a small IPC surface, accepting that
+          the pinned guardrails checkout has no Rust pack until
+          GR-LANG-RUST-001 lands.
+        acceptance_criteria:
+          - "The app is Tauri 2 with React, TypeScript, and Node 24"
+          - "CSP is strict, the capability allowlist is minimal, and the shell plugin is absent"
+        guardrail_refs:
+          - NODE-TEST-002
+        tasks:
+          - id: HD-001-T1
+            status: open
+            title: Pin guardrails and the scaffold
+            instructions:
+              files:
+                - .gitmodules
+                - docs/guardrail-deviations.yml
+            verification:
+              - sh scripts/check-submodule-pins.sh
+          - id: HD-001-T2
+            status: open
+            title: Add the Tauri skeleton
+            instructions:
+              files:
+                - src-tauri/tauri.conf.json
+                - package.json
+            verification:
+              - cargo fmt --check
+              - npm run tauri build -- --bundles deb
+      - id: HD-002
+        status: open
+        title: Sync a local library with Delphi
+        overview:
+          problem: >-
+            A local library and Delphi can disagree about which works exist,
+            and uploading every PDF repeats work the server already has.
+          goal: >-
+            SHA-256 and DOI batch-check in chunks of 500 pulls metadata on a
+            hit and queues the PDF on a miss.
+        decision: >-
+          In the context of matching a local library to Delphi, facing
+          duplicate uploads, we decided SHA-256 and DOI batch-check in chunks
+          of 500, pulling metadata on a hit and queueing the PDF on a miss,
+          to achieve incremental sync, accepting that a miss stays queued
+          until the user consents.
+        acceptance_criteria:
+          - "Batch-check requests contain at most 500 identities"
+          - "A hit stores server metadata and a miss queues the PDF"
+        tasks:
+          - id: HD-002-T1
+            status: open
+            title: Implement the sync engine
+            instructions:
+              files:
+                - src-tauri/src/sync.rs
+            verification:
+              - cargo test
+      - id: HD-003
+        status: open
+        title: Read local Zotero and Qiqqa libraries
+        overview:
+          problem: >-
+            Zotero locks its live database, so the app cannot open that file
+            for a long read.
+          goal: >-
+            Read-only snapshots of Zotero and Qiqqa, opened with immutable=1.
+        decision: >-
+          In the context of existing reference managers, facing a locked live
+          database, we decided read-only SQLite snapshots of Zotero and Qiqqa
+          opened with immutable=1, to achieve a stable read, accepting that
+          cloud libraries wait for HD-006.
+        acceptance_criteria:
+          - "Readers copy a snapshot and open it with immutable=1"
+          - "Zotero and Qiqqa each yield work identity and PDF path rows"
+        tasks:
+          - id: HD-003-T1
+            status: open
+            title: Add the SQLite readers
+            instructions:
+              files:
+                - src-tauri/src/zotero.rs
+                - src-tauri/src/qiqqa.rs
+            verification:
+              - cargo test
+      - id: HD-004
+        status: open
+        title: Require consent before upload
+        overview:
+          problem: >-
+            A sync miss would otherwise send a PDF to Delphi without a
+            decision from the person at the machine.
+          goal: >-
+            IPC refuses an upload that has no per-file consent.
+        decision: >-
+          In the context of PDF upload to Delphi, facing unattended file
+          transfer, we decided an IPC consent gate that refuses upload
+          without per-file consent, to achieve an explicit decision,
+          accepting a dialog before each upload.
+        acceptance_criteria:
+          - "Upload IPC returns an error when consent for that file is missing"
+        tasks:
+          - id: HD-004-T1
+            status: open
+            title: Gate upload on per-file consent
+            instructions:
+              files:
+                - src-tauri/src/consent.rs
+            verification:
+              - cargo test
+      - id: HD-005
+        status: open
+        title: Cache sync results for offline browsing
+        overview:
+          problem: >-
+            Sync results disappear when Delphi is not running.
+          goal: >-
+            A rusqlite cache keeps batch-check and neighborhood results on disk.
+        decision: >-
+          In the context of browsing sync results, facing a Delphi process
+          that may be offline, we decided a rusqlite cache, to achieve local
+          browsing, accepting that cached rows can be stale until the next sync.
+        acceptance_criteria:
+          - "A recorded batch-check row is readable with Delphi stopped"
+        tasks:
+          - id: HD-005-T1
+            status: open
+            title: Add the rusqlite cache
+            instructions:
+              files:
+                - src-tauri/src/cache.rs
+            verification:
+              - cargo test
+      - id: HD-006
+        status: open
+        title: Plan Mendeley and Zotero cloud adapters
+        overview:
+          problem: >-
+            Some libraries exist only in a vendor cloud and have no local
+            SQLite file.
+          goal: >-
+            The follow-on is recorded and is not part of the 0.1.0 slice.
+        decision: >-
+          In the context of libraries that live in a vendor cloud, facing no
+          local SQLite file, we decided to record Mendeley and Zotero Web API
+          adapters without implementing them in 0.1.0, to achieve a visible
+          follow-on, accepting that 0.1.0 reads only local databases.
+        out_of_scope:
+          - Implementing the cloud clients in the 0.1.0 slice
+        acceptance_criteria:
+          - "The epic stays open and names the two cloud APIs"
+        tasks:
+          - id: HD-006-T1
+            status: open
+            title: Design the cloud adapters
+            instructions:
+              files:
+                - docs/issues.yml
+            verification:
+              - "HD-006 remains open and lists Mendeley and Zotero Web API"

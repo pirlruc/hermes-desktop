@@ -1,0 +1,14 @@
+# Recorded departures from the guardrails pinned at docs/guardrails/.
+# Stricter than the org default needs no entry. Lowering a gate needs an Epic
+# and Engineering Lead approval. See docs/guardrails deviation rule.
+deviations:
+  - id: GS-PACK-001
+    why: >-
+      The desktop app is Rust and Tauri. The pinned guardrails checkout has
+      no rust pack, so check-guardrails-packs fails once Cargo.toml exists.
+      Upstream work is https://github.com/pirlruc/guardrails/issues/505
+      (GR-LANG-RUST-001).
+    epic: HD-001
+    owner: pirlruc
+    approved_by: pirlruc (2026-11-20)
+    review: 2027-02-20
