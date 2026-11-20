@@ -15,7 +15,11 @@ Tauri 2 desktop app. Rust core, React/TypeScript UI, Node 24. Pins a Delphi Engi
 
 ```bash
 sh scripts/check-submodule-pins.sh
+cargo test -p hermes-core
+npm test -- --coverage --coverage.reporter=json-summary
 ```
+
+Rust 1.85. The Tauri shell pins Tauri 2.2.5 so the crate graph stays on that toolchain. `cargo test -p hermes-core` does not link WebKit. The Linux bundle still needs the webkit packages from `tauri-build`.
 
 ## Known pitfalls
 
@@ -25,7 +29,7 @@ sh scripts/check-submodule-pins.sh
 
 ## Suggested next work
 
-1. Tauri skeleton, sync engine, Zotero and Qiqqa readers, consent gate, cache, and the React UI (HD-002 through HD-005).
-2. Callers for nodedevops and rustdevops, then a Linux 0.1.0 bundle.
+1. Callers for nodedevops and rustdevops, then a Linux 0.1.0 bundle. `npm audit` currently reports high and critical advisories in the frontend lockfile.
+2. HD-006 stays open. Cloud adapters are not in this slice.
 
-*Last updated: 2026-11-20 — scaffold and HD-001..006 authored.*
+*Last updated: 2026-11-20 — sync core, readers, consent, cache, and the React shell.*
