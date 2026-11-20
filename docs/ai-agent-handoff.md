@@ -20,7 +20,7 @@ sh scripts/check-submodule-pins.sh
 ## Known pitfalls
 
 - Analog submodules are private. Checkout does not clone them without a read token.
-- `check-guardrails-packs.py` does not read `docs/guardrail-deviations.yml`. A `Cargo.toml` fails that check until a rust pack exists. The deviation points at guardrails issue 505.
+- `check-guardrails-packs.py` does not read `docs/guardrail-deviations.yml`. A `Cargo.toml` fails that check until a rust pack exists. The CI-021 deviation records the missing thresholds file and points at guardrails issue 505.
 - Host has no Rust or webkit2gtk. Build in the rustdevops image.
 
 ## Suggested next work
