@@ -19,7 +19,7 @@ cargo test -p hermes-core
 npm test -- --coverage --coverage.reporter=json-summary
 ```
 
-Rust 1.85. The Tauri shell pins Tauri 2.2.5 so the crate graph stays on that toolchain. `cargo test -p hermes-core` does not link WebKit. The Linux bundle still needs the webkit packages from `tauri-build`.
+Rust 1.85. The Tauri shell pins Tauri 2.2.5 so the crate graph stays on that toolchain. `src-tauri` is its own workspace so `rust-quality` does not compile WebKit. The Linux bundle is `npm run tauri build -- --bundles deb` inside `tauri-build`.
 
 ## Known pitfalls
 
@@ -29,7 +29,7 @@ Rust 1.85. The Tauri shell pins Tauri 2.2.5 so the crate graph stays on that too
 
 ## Suggested next work
 
-1. Callers for nodedevops and rustdevops, then a Linux 0.1.0 bundle. `npm audit` currently reports high and critical advisories in the frontend lockfile.
+1. Wait for `.github/workflows/ci.yml` on `feature-sync-core` to go green, then tag Linux 0.1.0. Vitest is 4.1.12 so `npm audit --audit-level=high` is clean; remaining findings are moderate.
 2. HD-006 stays open. Cloud adapters are not in this slice.
 
-*Last updated: 2026-11-20 — sync core, readers, consent, cache, and the React shell.*
+*Last updated: 2026-11-20 — CI callers, split Tauri workspace, Vitest 4.1.12.*
