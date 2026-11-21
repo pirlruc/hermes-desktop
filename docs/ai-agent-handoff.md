@@ -9,7 +9,7 @@ Tauri 2 desktop app. Rust core, React/TypeScript UI, Node 24. Pins a Delphi Engi
 | guardrails | 1.15.0 (`2d4bb70e95449f6922781716857adeb22badf676`) |
 | github-scaffold | 1.12.0 (`9c443ea978851768f451b1df2020dd86dfb1a967`) |
 | nodedevops | `52d746e815d2e7d193fed55d2a232c600f9222d7` |
-| rustdevops | 1.0.2 (`59027aae1a5df6e9d23d328a7a066ebe4f283edd`) |
+| rustdevops | 1.0.3 (`229508bc4c129b29231232c3514627f89534c8fd`) |
 
 ## Commands
 
@@ -34,4 +34,4 @@ Rust 1.85. The Tauri shell pins Tauri 2.2.5 so the crate graph stays on that too
 1. Wait for `.github/workflows/ci.yml` on `feature-sync-core` to go green, then tag Linux 0.1.0. Vitest is 4.1.12 so `npm audit --audit-level=high` is clean; remaining findings are moderate.
 2. HD-006 stays open. Cloud adapters are not in this slice.
 
-*Last updated: 2026-11-21 — rustdevops 1.0.2. cargo-audit 0.23.0 loads the advisory database, and tauri-build still installs libxdo.*
+*Last updated: 2026-11-21 — rustdevops 1.0.3. cargo-audit 0.23.0 is built with rustc 1.88; the crate build stays on 1.85.*
