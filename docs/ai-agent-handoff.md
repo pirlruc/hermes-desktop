@@ -10,11 +10,13 @@ Tauri 2 desktop app. Rust core, React/TypeScript UI, Node 24. Pins a Delphi Engi
 | github-scaffold | 1.12.0 (`9c443ea978851768f451b1df2020dd86dfb1a967`) |
 | nodedevops | `52d746e815d2e7d193fed55d2a232c600f9222d7` |
 | rustdevops | 1.0.5 (`03c252f48142e39e145d616240c47a7c7747e362`) |
+| Delphi Engine OpenAPI | 0.1.0 (`f21665fb4c24c6e4cf1efcea15227650250bfe3f6f3da391918705c8f9fa9d31`) |
 
 ## Commands
 
 ```bash
 sh scripts/check-submodule-pins.sh
+npm run generate:api
 cargo test -p hermes-core
 npm test -- --coverage --coverage.reporter=json-summary
 ```
@@ -33,6 +35,5 @@ Rust 1.89. `rusqlite` 0.41 bundles SQLite 3.54 (RUSTSEC-2026-0459). Tauri stays 
 ## Suggested next work
 
 1. HD-006 stays open. Cloud adapters are not in this slice. Windows, macOS, and update signing stay issues.
-2. Pin a Delphi Engine release in place of the vendored OpenAPI document once Delphi Engine 0.1.0 exists.
 
-*Last updated: 2026-11-21 — 0.1.0 is the Linux deb on `5089c637f4f444ea8bf36e7d36040124527ed3a0`.*
+*Last updated: 2026-11-21 — OpenAPI is Delphi Engine 0.1.0. Hermes 0.1.0 stays the Linux deb on `5089c637f4f444ea8bf36e7d36040124527ed3a0`.*
