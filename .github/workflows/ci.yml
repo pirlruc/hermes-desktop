@@ -24,16 +24,16 @@ jobs:
   rust-quality:
     permissions:
       contents: read
-    uses: pirlruc/rustdevops/.github/workflows/rust-quality.yml@229508bc4c129b29231232c3514627f89534c8fd
+    uses: pirlruc/rustdevops/.github/workflows/rust-quality.yml@759d9488cc35fedf353052544f45c43fbe4daa1a
     with:
-      devops_ref: 229508bc4c129b29231232c3514627f89534c8fd
+      devops_ref: 759d9488cc35fedf353052544f45c43fbe4daa1a
 
   tauri-build:
     permissions:
       contents: read
-    uses: pirlruc/rustdevops/.github/workflows/tauri-build.yml@229508bc4c129b29231232c3514627f89534c8fd
+    uses: pirlruc/rustdevops/.github/workflows/tauri-build.yml@759d9488cc35fedf353052544f45c43fbe4daa1a
     with:
-      devops_ref: 229508bc4c129b29231232c3514627f89534c8fd
+      devops_ref: 759d9488cc35fedf353052544f45c43fbe4daa1a
       bundles: deb
 
   required:
