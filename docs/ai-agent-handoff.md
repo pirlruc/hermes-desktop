@@ -32,7 +32,7 @@ Rust 1.89. `rusqlite` 0.41 bundles SQLite 3.54 (RUSTSEC-2026-0459). Tauri stays 
 
 ## Suggested next work
 
-1. Wait for `.github/workflows/ci.yml` on `feature-sync-core` to go green, then tag Linux 0.1.0. Vitest is 4.1.12 so `npm audit --audit-level=high` is clean; remaining findings are moderate.
-2. HD-006 stays open. Cloud adapters are not in this slice.
+1. HD-006 stays open. Cloud adapters are not in this slice. Windows, macOS, and update signing stay issues.
+2. Pin a Delphi Engine release in place of the vendored OpenAPI document once Delphi Engine 0.1.0 exists.
 
-*Last updated: 2026-11-21 — rustdevops 1.0.5; deny.toml allows Zlib and CDLA-Permissive-2.0.*
+*Last updated: 2026-11-21 — 0.1.0 is the Linux deb on `5089c637f4f444ea8bf36e7d36040124527ed3a0`.*
