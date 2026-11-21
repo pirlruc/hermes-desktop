@@ -159,4 +159,18 @@ mod tests {
         assert_eq!(works[0].title, "A note");
         assert_eq!(works[0].pdf_path.as_deref(), Some("fp1.pdf"));
     }
+
+    #[test]
+    fn an_empty_database_is_not_a_library() {
+        let dir = tempfile::tempdir().unwrap();
+        let source = dir.path().join("empty.sqlite");
+        Connection::open(&source)
+            .unwrap()
+            .execute_batch("")
+            .unwrap();
+        let zotero = ZoteroReader::read(&source, dir.path()).unwrap_err();
+        assert!(zotero.to_string().contains("Zotero"));
+        let qiqqa = QiqqaReader::read(&source, dir.path()).unwrap_err();
+        assert!(qiqqa.to_string().contains("Qiqqa"));
+    }
 }

@@ -130,7 +130,9 @@ fn work_matches(work: &LibraryWork, identity: &Identity) -> bool {
 
 #[cfg(test)]
 mod tests {
-    use super::{chunk, identities_for, plan, BatchRow, Identity, SyncAction, BATCH_LIMIT};
+    use super::{
+        chunk, identities_for, plan, BatchRow, DelphiClient, Identity, SyncAction, BATCH_LIMIT,
+    };
     use crate::library::LibraryWork;
 
     fn work(key: &str, doi: Option<&str>, pdf: bool) -> LibraryWork {
@@ -197,6 +199,75 @@ mod tests {
                 },
             ]
         );
+    }
+
+    #[test]
+    fn batch_check_reads_rows_and_rejects_a_long_chunk() {
+        let identities = vec![Identity {
+            kind: "doi".to_string(),
+            value: "10.1/a".to_string(),
+        }];
+        let body =
+            r#"{"rows":[{"identity":{"kind":"doi","value":"10.1/a"},"known":true,"work_id":"w"}]}"#;
+        let client = DelphiClient::new(format!("{}/", serve(body)), "secret");
+        let rows = client.batch_check(&identities).unwrap();
+        assert_eq!(rows[0].work_id.as_deref(), Some("w"));
+        assert!(client.batch_check(&[]).unwrap().is_empty());
+        let too_many = vec![identities[0].clone(); BATCH_LIMIT + 1];
+        let err = client.batch_check(&too_many).unwrap_err();
+        assert!(err.to_string().contains("batch-check"));
+    }
+
+    #[test]
+    fn batch_check_reports_a_transport_failure() {
+        let client = DelphiClient::new(serve("not-json"), "secret");
+        let err = client
+            .batch_check(&[Identity {
+                kind: "doi".to_string(),
+                value: "10.1/a".to_string(),
+            }])
+            .unwrap_err();
+        assert!(err.to_string().contains("delphi request failed"));
+    }
+
+    #[test]
+    fn empty_doi_is_skipped_and_a_hash_hit_is_known() {
+        let work = work("hashed", Some(""), true);
+        assert!(identities_for(&work, None).is_empty());
+        let rows = vec![BatchRow {
+            identity: Identity {
+                kind: "content_hash".to_string(),
+                value: "abc".to_string(),
+            },
+            known: true,
+            work_id: Some("w-hash".to_string()),
+        }];
+        assert_eq!(
+            plan(&[work], &rows),
+            vec![SyncAction::Known {
+                key: "hashed".to_string(),
+                work_id: "w-hash".to_string(),
+            }]
+        );
+        let items = [1u8, 2];
+        assert_eq!(chunk(&items, 0).count(), 2);
+    }
+
+    fn serve(body: &'static str) -> String {
+        use std::io::{Read, Write};
+        let listener = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+        let port = listener.local_addr().unwrap().port();
+        std::thread::spawn(move || {
+            let (mut socket, _) = listener.accept().unwrap();
+            let mut buffer = [0_u8; 2048];
+            let _ = socket.read(&mut buffer);
+            let response = format!(
+                "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                body.len()
+            );
+            let _ = socket.write_all(response.as_bytes());
+        });
+        format!("http://127.0.0.1:{port}")
     }
 
     #[test]
