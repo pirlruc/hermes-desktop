@@ -9,7 +9,7 @@ Tauri 2 desktop app. Rust core, React/TypeScript UI, Node 24. Pins a Delphi Engi
 | guardrails | 1.15.0 (`2d4bb70e95449f6922781716857adeb22badf676`) |
 | github-scaffold | 1.12.0 (`9c443ea978851768f451b1df2020dd86dfb1a967`) |
 | nodedevops | `52d746e815d2e7d193fed55d2a232c600f9222d7` |
-| rustdevops | 1.0.4 (`759d9488cc35fedf353052544f45c43fbe4daa1a`) |
+| rustdevops | 1.0.5 (`03c252f48142e39e145d616240c47a7c7747e362`) |
 
 ## Commands
 
@@ -34,4 +34,4 @@ Rust 1.89. `rusqlite` 0.41 bundles SQLite 3.54 (RUSTSEC-2026-0459). Tauri stays 
 1. Wait for `.github/workflows/ci.yml` on `feature-sync-core` to go green, then tag Linux 0.1.0. Vitest is 4.1.12 so `npm audit --audit-level=high` is clean; remaining findings are moderate.
 2. HD-006 stays open. Cloud adapters are not in this slice.
 
-*Last updated: 2026-11-21 — rustdevops 1.0.4 and rusqlite 0.41 on rustc 1.89.*
+*Last updated: 2026-11-21 — rustdevops 1.0.5 (cargo-deny 0.21.0) and rusqlite 0.41 on rustc 1.89.*
