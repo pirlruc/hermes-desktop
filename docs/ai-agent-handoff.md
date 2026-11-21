@@ -26,6 +26,8 @@ Rust 1.85. The Tauri shell pins Tauri 2.2.5 so the crate graph stays on that too
 - Analog submodules are private. Checkout does not clone them without a read token.
 - `check-guardrails-packs.py` does not read `docs/guardrail-deviations.yml`. A `Cargo.toml` fails that check until a rust pack exists. The CI-021 deviation records the missing thresholds file and points at guardrails issue 505.
 - Host has no Rust or webkit2gtk. Build in the rustdevops image.
+- Custom commands need `src-tauri/permissions/app.toml`. The capability identifiers are not inferred from `#[tauri::command]`.
+- Coverage floors read `coverage/coverage-summary.json` totals. Exclude `src/**/*.tsx`; the shell is not in the 95/95 floor.
 
 ## Suggested next work
 
