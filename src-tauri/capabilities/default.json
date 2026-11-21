@@ -1,0 +1,10 @@
+{
+  "identifier": "default",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "allow-library",
+    "allow-sync-status",
+    "allow-grant-consent"
+  ]
+}

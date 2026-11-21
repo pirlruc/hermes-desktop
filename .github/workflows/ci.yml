@@ -1,0 +1,61 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  node-quality:
+    permissions:
+      contents: read
+    uses: pirlruc/nodedevops/.github/workflows/node-quality.yml@52d746e815d2e7d193fed55d2a232c600f9222d7
+    with:
+      devops_ref: 52d746e815d2e7d193fed55d2a232c600f9222d7
+      node_version: "24"
+
+  rust-quality:
+    permissions:
+      contents: read
+    uses: pirlruc/rustdevops/.github/workflows/rust-quality.yml@03c252f48142e39e145d616240c47a7c7747e362
+    with:
+      devops_ref: 03c252f48142e39e145d616240c47a7c7747e362
+
+  tauri-build:
+    permissions:
+      contents: read
+    uses: pirlruc/rustdevops/.github/workflows/tauri-build.yml@03c252f48142e39e145d616240c47a7c7747e362
+    with:
+      devops_ref: 03c252f48142e39e145d616240c47a7c7747e362
+      bundles: deb
+
+  required:
+    if: always()
+    needs:
+      - node-quality
+      - rust-quality
+      - tauri-build
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - name: Fail when a required job failed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python3 - <<'PY'
+          import json, os, sys
+          needs = json.loads(os.environ["RESULTS"])
+          bad = [name for name, info in needs.items() if info.get("result") not in ("success", "skipped")]
+          if bad:
+              print("required jobs not green:", ", ".join(bad))
+              sys.exit(1)
+          print("required jobs are green or skipped")
+          PY

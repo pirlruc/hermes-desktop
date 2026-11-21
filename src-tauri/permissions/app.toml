@@ -1,0 +1,14 @@
+[[permission]]
+identifier = "allow-library"
+description = "List works stored in the local library."
+commands.allow = ["library"]
+
+[[permission]]
+identifier = "allow-sync-status"
+description = "Read how many sync results are cached."
+commands.allow = ["sync_status"]
+
+[[permission]]
+identifier = "allow-grant-consent"
+description = "Store consent before an upload."
+commands.allow = ["grant_consent"]

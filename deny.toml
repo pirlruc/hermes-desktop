@@ -1,0 +1,18 @@
+[advisories]
+version = 2
+yanked = "deny"
+
+[licenses]
+version = 2
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-3.0",
+    "MPL-2.0",
+    # foldhash (via rusqlite 0.41) is Zlib. OSI approved and FSF free.
+    "Zlib",
+    # ureq's webpki-roots ships the Mozilla CA bundle under CDLA-Permissive-2.0.
+    "CDLA-Permissive-2.0",
+]
